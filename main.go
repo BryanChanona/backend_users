@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/BryanChanona/backend_users/src/Mqtt/infrastructure/adapters"
+	//"github.com/BryanChanona/backend_users/src/Mqtt/infrastructure/adapters"
 	"github.com/BryanChanona/backend_users/src/User/infrastructure/dependencies"
 	"github.com/BryanChanona/backend_users/src/User/infrastructure/routes"
 	"github.com/gin-gonic/gin"
@@ -11,7 +11,7 @@ import (
 )
 
 func main() {
-	adapters.InitMQTT()
+	//adapters.InitMQTT()
 	dependencies.Init()
 
 	r := gin.Default()
