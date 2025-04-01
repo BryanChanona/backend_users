@@ -27,7 +27,11 @@ func GetSaveUserController() *controllers.RegisterUsercontroller{
 	useCaseSaveUser := UseCase.NewRegisterUserUC(&mySQL)
 	return controllers.NewRegisterUserController(*useCaseSaveUser)
 }
-func GeyLoginController() *controllers.LogInController{
+func GetLoginController() *controllers.LogInController{
 	useCase := UseCase.NewLogInUc(&mySQL)
 	return controllers.NewLogInController(useCase)
+}
+func GetUpdateStatusController() *controllers.UpdateStatusController{
+	useCase := UseCase.NewUpdateStatusUc(&mySQL)
+	return controllers.NewUpdateStatusUcController(useCase)
 }

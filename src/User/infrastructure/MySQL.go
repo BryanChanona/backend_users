@@ -57,3 +57,17 @@ func (sql *MySQL)LogIn(email string, password string) (domain.User,error){
 
 
 }
+func (sql *MySQL)UpdateStatus(id_usuario int, status bool) error {
+	query, err := sql.db.Prepare("UPDATE usuario SET premium = ? WHERE id_usuario = ?")
+	if err != nil {
+		return err
+	}
+	defer query.Close()
+
+	_, err = query.Exec(status, id_usuario)
+	if err != nil {
+		log.Println("Error updating user status:", err)
+		return err
+	}
+	return nil
+}
