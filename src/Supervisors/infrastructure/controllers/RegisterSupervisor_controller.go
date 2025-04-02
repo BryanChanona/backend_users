@@ -21,7 +21,7 @@ func (controller *RegisterSupervisorController)Execute(ctx *gin.Context) {
 	var supervisor domain.SupervisorsModel
 
 	// Obtener el ID del usuario logueado (ejemplo: de un token JWT)
-	userID, exists := ctx.Get("userID")
+	userID, exists := ctx.Get("id_user")
 	if !exists {
 		ctx.JSON(http.StatusUnauthorized, gin.H{"error": "usuario no autenticado"})
 		return
