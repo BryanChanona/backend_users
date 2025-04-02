@@ -9,6 +9,6 @@ func Routes(router *gin.Engine) {
 	routes := router.Group("/supervisors")
 	registerSupervisorController := dependencies.GetSaveSupervisorController().Execute
 
-	routes.POST("/:idUser",registerSupervisorController)
+	routes.POST("/",registerSupervisorController)
 
 }

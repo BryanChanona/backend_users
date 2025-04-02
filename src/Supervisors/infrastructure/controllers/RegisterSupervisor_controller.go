@@ -17,30 +17,37 @@ func NewRegisterSupervisorController(useCase *UseCase.RegisterSupervisorUC) *Reg
 	return &RegisterSupervisorController{useCase: useCase}
 }
 
-func (controller *RegisterSupervisorController) Execute(ctx *gin.Context) {
+func (controller *RegisterSupervisorController)Execute(ctx *gin.Context) {
 	var supervisor domain.SupervisorsModel
 
-	// Obtener el idUser desde la URL y validar que sea un número
-	idUser, err := strconv.Atoi(ctx.Param("idUser"))
+	// Obtener el ID del usuario logueado (ejemplo: de un token JWT)
+	userID, exists := ctx.Get("id_user")
+	if !exists {
+		ctx.JSON(http.StatusUnauthorized, gin.H{"error": "usuario no autenticado"})
+		return
+	}
+
+	// Convertir el ID a entero
+	idUser, err := strconv.Atoi(userID.(string))
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": "ID de usuario no válido"})
 		return
 	}
 
-	// Validar el JSON recibido
+	// Validar datos recibidos
 	if err := ctx.ShouldBindJSON(&supervisor); err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Datos inválidos"})
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "datos inválidos"})
 		return
 	}
 
-	// Asignar el ID de usuario al supervisor
+	// Asignar el ID del usuario al supervisor
 	supervisor.Id_usuario = idUser
 
-	// Ejecutar el caso de uso para registrar el supervisor
+	// Ejecutar caso de uso
 	if err := controller.useCase.Execute(supervisor); err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	ctx.JSON(http.StatusCreated, gin.H{"message": "Supervisor registrado con éxito"})
+	ctx.JSON(http.StatusCreated, gin.H{"message": "supervisor registrado exitosamente"})
 }
