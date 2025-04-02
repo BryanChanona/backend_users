@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"net/http"
-	"strconv"
 
 	"github.com/BryanChanona/backend_users/src/Supervisors/application/UseCase"
 	"github.com/BryanChanona/backend_users/src/Supervisors/domain"
@@ -17,7 +16,7 @@ func NewRegisterSupervisorController(useCase *UseCase.RegisterSupervisorUC) *Reg
 	return &RegisterSupervisorController{useCase: useCase}
 }
 
-func (controller *RegisterSupervisorController)Execute(ctx *gin.Context) {
+func (controller *RegisterSupervisorController) Execute(ctx *gin.Context) {
 	var supervisor domain.SupervisorsModel
 
 	// Obtener el ID del usuario logueado (ejemplo: de un token JWT)
@@ -27,9 +26,9 @@ func (controller *RegisterSupervisorController)Execute(ctx *gin.Context) {
 		return
 	}
 
-	// Convertir el ID a entero
-	idUser, err := strconv.Atoi(userID.(string))
-	if err != nil {
+	// Asegurarse de que userID es de tipo int
+	idUser, ok := userID.(int)
+	if !ok {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": "ID de usuario no válido"})
 		return
 	}
