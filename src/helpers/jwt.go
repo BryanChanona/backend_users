@@ -10,14 +10,14 @@ import (
 var jwtKey = []byte(os.Getenv("JWT_SECRET"))
 
 type Claims struct {
-	Email string `json:"email"`
+	IdUser int `json:"id_user"`
 	jwt.StandardClaims
 }
 
-func GenerateJWT(email string) (string, error) {
+func GenerateJWT(IdUser int) (string, error) {
 	expirationTime := time.Now().Add(5 * time.Minute)
 	claims := &Claims{
-		Email: email,
+		IdUser: IdUser,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: expirationTime.Unix(),
 		},

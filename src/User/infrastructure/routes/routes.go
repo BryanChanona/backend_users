@@ -3,6 +3,7 @@ package routes
 import (
 
 	"github.com/BryanChanona/backend_users/src/User/infrastructure/dependencies"
+	"github.com/BryanChanona/backend_users/src/middlewares"
 	"github.com/gin-gonic/gin"
 )
 
@@ -16,6 +17,6 @@ func Routes(router *gin.Engine) {
 
 	routes.POST("/", saveUserController)
 	routes.POST("/login",loginController)
-	routes.PUT("/updateStatus/:idUser", updateStatus)
+	routes.PUT("/updateStatus/:idUser",middlewares.AuthMiddleware(), updateStatus)
 
 }
