@@ -27,4 +27,8 @@ func GetSaveSupervisorController() *controllers.RegisterSupervisorController {
 	useCaseSaveSupervisor := UseCase.NewRegisterSupervisorUc(&mySQL)
 	return controllers.NewRegisterSupervisorController(useCaseSaveSupervisor)
 }
+func GetDeleteSupervisorController()*controllers.DeleteSupervisorController{
+	useCase := UseCase.NewDeleteSupervisorUc(&mySQL)
+	return controllers.NewDeleteSupervisorController(useCase)
+}
 
