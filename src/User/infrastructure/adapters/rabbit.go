@@ -5,12 +5,12 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/BryanChanona/backend_users/src/Mqtt/domain"
+	"github.com/BryanChanona/backend_users/src/User/domain"
 	mqtt "github.com/eclipse/paho.mqtt.golang"
-	"github.com/gin-gonic/gin"
 )
 
 var client mqtt.Client
+
 
 // InitMQTT inicializa la conexión al broker MQTT
 func InitMQTT() {
@@ -30,29 +30,24 @@ func InitMQTT() {
 	fmt.Println("Conectado al broker MQTT")
 }
 
-// PublishHandler maneja la solicitud POST y publica en MQTT
-func PublishHandler(c *gin.Context) {
+// PublishUserData publica el id_usuario e id_device en MQTT
+func PublishUserData(idUser, idDevice int) error {
 	// Verifica si el cliente MQTT está conectado
 	if client == nil || !client.IsConnected() {
 		log.Println("El cliente MQTT no está conectado.")
-		c.JSON(500, gin.H{"error": "Cliente MQTT no conectado"})
-		return
+		return fmt.Errorf("cliente MQTT no conectado")
 	}
 
-	// Leer los datos JSON de la solicitud
-	var data domain.DeviceData
-	if err := c.ShouldBindJSON(&data); err != nil {
-		log.Printf("Error al leer los datos: %v", err)
-		c.JSON(400, gin.H{"error": "Error al leer los datos"})
-		return
+	data := domain.DeviceData{
+		IdUser: idUser,
+		IdDevice: idDevice,	
 	}
 
 	// Convertir los datos a JSON
 	payload, err := json.Marshal(data)
 	if err != nil {
 		log.Printf("Error al serializar los datos: %v", err)
-		c.JSON(500, gin.H{"error": "Error al serializar los datos"})
-		return
+		return fmt.Errorf("error al serializar los datos")
 	}
 
 	// Publicar en MQTT
@@ -62,12 +57,10 @@ func PublishHandler(c *gin.Context) {
 
 	if token.Error() != nil {
 		log.Printf("Error al publicar el mensaje: %v", token.Error())
-		c.JSON(500, gin.H{"error": "Error al publicar el mensaje en MQTT"})
-		return
+		return fmt.Errorf("error al publicar el mensaje en MQTT")
 	}
 
 	fmt.Println("Mensaje enviado a MQTT:", string(payload))
 
-	// Responder con éxito
-	c.JSON(200, gin.H{"message": "Datos enviados correctamente"})
+	return nil
 }

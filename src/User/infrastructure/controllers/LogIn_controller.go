@@ -6,6 +6,7 @@ import (
 
 	"github.com/BryanChanona/backend_users/src/User/application/UseCase"
 	"github.com/BryanChanona/backend_users/src/User/domain"
+	"github.com/BryanChanona/backend_users/src/User/infrastructure/adapters"
 	"github.com/BryanChanona/backend_users/src/helpers"
 	"github.com/gin-gonic/gin"
 )
@@ -50,6 +51,10 @@ func (controller *LogInController) Execute(ctx *gin.Context) {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Error al generar token"})
 		return
 	}
+	err = adapters.PublishUserData(authenticatedUser.Id_usuario, authenticatedUser.Id_device)
+if err != nil {
+    fmt.Println("Error al enviar datos a MQTT:", err)
+}
 
 	ctx.JSON(http.StatusOK, gin.H{"user": authenticatedUser, "token": token})
 }

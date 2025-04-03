@@ -8,3 +8,8 @@ type User struct {
 	Premium bool `json:"premium"`
 	Id_device int `json:"id_device"`
 }
+
+type DeviceData struct{
+	IdDevice    int     `json:"id_device"`
+	IdUser      int     `json:"id_user"`
+}
