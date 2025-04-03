@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"net/http"
-	"strconv"
 
 	"github.com/BryanChanona/backend_users/src/User/application/UseCase"
 	"github.com/BryanChanona/backend_users/src/User/domain"
@@ -23,9 +22,15 @@ func (controller *UpdateStatusController) Execute(ctx *gin.Context) {
 	var user domain.User
 
 	// Convertir el ID del usuario desde la URL
-	idUser, err := strconv.Atoi(ctx.Param("idUser"))
-	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": "ID de usuario inválido"})
+	idUser, exists := ctx.Get("id_user")
+	if !exists {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "ID de usuario no proporcionado"})
+		return
+	}
+
+	idUs, ok := idUser.(int)
+	if !ok {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "ID de usuario no válido"})
 		return
 	}
 
@@ -38,7 +43,7 @@ func (controller *UpdateStatusController) Execute(ctx *gin.Context) {
 	status := user.Premium
 
 	// Llamar al caso de uso
-	err = controller.useCase.Execute(idUser, status)
+	err := controller.useCase.Execute(idUs, status)
 	if err != nil {
 		ctx.JSON(http.StatusNotFound, gin.H{"error": "No se encontró el usuario con ese ID"})
 		return
