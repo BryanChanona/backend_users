@@ -110,5 +110,30 @@ func (sql *MySQL) DeleteSupervisor(idUser, idSupervisor int) error {
 
 	return nil
 }
+func (sql *MySQL) GetSupervisorsByUser(idUser int) ([]domain.SupervisorsResponse, error) {
+	query, err := sql.db.Prepare("SELECT id_supervisor,nombre,correo FROM supervisor WHERE id_usuario = ?")
+	if err != nil {
+		return nil, fmt.Errorf("error preparando la consulta: %w", err)
+	}
+	defer query.Close()
+
+	rows, err := query.Query(idUser)
+	if err != nil {
+		return nil, fmt.Errorf("error ejecutando la consulta: %w", err)
+	}
+	defer rows.Close()
+
+	var supervisors []domain.SupervisorsResponse
+	for rows.Next() {
+		var supervisor domain.SupervisorsResponse
+		err := rows.Scan(&supervisor.Id_supervisor, &supervisor.Name, &supervisor.Email)
+		if err != nil {
+			return nil, fmt.Errorf("error escaneando filas: %w", err)
+		}
+		supervisors = append(supervisors, supervisor)
+	}
+
+	return supervisors, nil
+}
 
 

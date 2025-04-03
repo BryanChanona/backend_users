@@ -31,4 +31,8 @@ func GetDeleteSupervisorController()*controllers.DeleteSupervisorController{
 	useCase := UseCase.NewDeleteSupervisorUc(&mySQL)
 	return controllers.NewDeleteSupervisorController(useCase)
 }
+func GetGetSupervisorsController()*controllers.GetSupervisorsByUserController{
+	useCase := UseCase.NewGetSupervisorByUserUC(&mySQL)
+	return controllers.NewGetSupervisorsByUserController(useCase)
+}
 

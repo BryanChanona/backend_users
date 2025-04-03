@@ -6,4 +6,5 @@ type ISupervisorRepository interface {
 	GetUserPremiumStatus(idUser int) (bool, error)
 	EmailAlreadyExists(email string) (bool, error)
 	DeleteSupervisor(idUser,idSupervisor int) error
+	GetSupervisorsByUser(idUser int) ([]SupervisorsResponse, error)
 }
