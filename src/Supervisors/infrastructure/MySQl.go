@@ -85,3 +85,30 @@ func (sql *MySQL) EmailAlreadyExists(email string) (bool, error) {
 
 	return count > 0, nil
 }
+
+
+func (sql *MySQL) DeleteSupervisor(idUser, idSupervisor int) error {
+	query, err := sql.db.Prepare("DELETE FROM supervisor WHERE id_usuario = ? AND id_supervisor = ?")
+	if err != nil {
+		return fmt.Errorf("error preparando la consulta: %w", err)
+	}
+	defer query.Close()
+
+	result, err := query.Exec(idUser, idSupervisor)
+	if err != nil {
+		return fmt.Errorf("error ejecutando la consulta: %w", err)
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return fmt.Errorf("error obteniendo filas afectadas: %w", err)
+	}
+
+	if rowsAffected == 0 {
+		return fmt.Errorf("no existe el supervisor")
+	}
+
+	return nil
+}
+
+
