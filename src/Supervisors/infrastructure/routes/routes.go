@@ -11,9 +11,11 @@ func Routes(router *gin.Engine) {
 	registerSupervisorController := dependencies.GetSaveSupervisorController().Execute
 	deleteSupervisorController := dependencies.GetDeleteSupervisorController().Execute
 	getSupervisorsController := dependencies.GetGetSupervisorsController().Execute
+	loginController :=dependencies.GetLoginController().Execute
 
 	routes.POST("/",middlewares.AuthMiddleware(),registerSupervisorController)
 	routes.DELETE("/:id_supervisor",middlewares.AuthMiddleware(),deleteSupervisorController)
 	routes.GET("",middlewares.AuthMiddleware(),getSupervisorsController)
+	routes.POST("/login",loginController)
 
 }

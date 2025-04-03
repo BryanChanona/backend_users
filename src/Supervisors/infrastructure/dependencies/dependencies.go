@@ -35,4 +35,8 @@ func GetGetSupervisorsController()*controllers.GetSupervisorsByUserController{
 	useCase := UseCase.NewGetSupervisorByUserUC(&mySQL)
 	return controllers.NewGetSupervisorsByUserController(useCase)
 }
+func GetLoginController() *controllers.LogInController {
+	useCase := UseCase.NewLoginUseCase(&mySQL)
+	return controllers.NewLogInController(useCase)
+}
 

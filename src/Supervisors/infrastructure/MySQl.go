@@ -2,10 +2,12 @@ package infrastructure
 
 import (
 	"database/sql"
+	"errors"
 	"fmt"
 	"log"
 
 	"github.com/BryanChanona/backend_users/src/Supervisors/domain"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type MySQL struct {
@@ -134,6 +136,27 @@ func (sql *MySQL) GetSupervisorsByUser(idUser int) ([]domain.SupervisorsResponse
 	}
 
 	return supervisors, nil
+}
+
+func (sql *MySQL)LoginSupervisors(email string, password string)(domain.SupervisorsModel, error){
+	var supervisor domain.SupervisorsModel
+	var hashedPassword string
+
+	query:= "SELECT id_supervisor, nombre, correo, password, id_usuario FROM supervisor WHERE correo = ?"
+	
+	err := sql.db.QueryRow(query,email).Scan(&supervisor.Id_supervisor,&supervisor.Name,&supervisor.Email,&hashedPassword,&supervisor.Id_usuario)
+	if err != nil {
+		return domain.SupervisorsModel{}, fmt.Errorf("error al buscar supervisor: %w", err)
+
+	}
+
+	err = bcrypt.CompareHashAndPassword([]byte(hashedPassword),[]byte(password))
+	if err != nil {
+		return domain.SupervisorsModel{}, errors.New("contraseña incorrecta")
+	}
+	
+	supervisor.Password = "" // Se limpia la contraseña por seguridad
+	return supervisor, nil
 }
 
 
