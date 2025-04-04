@@ -17,5 +17,6 @@ func Routes(router *gin.Engine) {
 	routes.DELETE("/:id_supervisor",middlewares.AuthMiddleware(),deleteSupervisorController)
 	routes.GET("",middlewares.AuthMiddleware(),getSupervisorsController)
 	routes.POST("/login",loginController)
+	
 
 }
