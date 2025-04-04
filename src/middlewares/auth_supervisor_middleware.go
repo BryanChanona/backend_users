@@ -15,6 +15,7 @@ var jwtSupervisorKey = []byte(os.Getenv("JWT_SUPERVISOR_SECRET"))
 // Claims específicos para el supervisor
 type SupervisorClaims struct {
 	IdSupervisor int    `json:"id_supervisor"`
+	IdUser	  int    `json:"id_user"`
 	jwt.StandardClaims
 }
 
@@ -48,6 +49,7 @@ func AuthSupervisorMiddleware() gin.HandlerFunc {
 
 		// Guardar el ID del supervisor en el contexto para usarlo en controladores
 		ctx.Set("id_supervisor", claims.IdSupervisor)
+		ctx.Set("id_user", claims.IdUser)
 		ctx.Next()
 	}
 }

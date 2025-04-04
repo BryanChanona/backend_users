@@ -36,7 +36,7 @@ func (controller *LogInController)Execute (ctx *gin.Context){
 		return
 	}
 
-	token, err := helpers.GenerateSupervisorJWT(authenticatedSupervisor.Id_supervisor)
+	token, err := helpers.GenerateSupervisorJWT(authenticatedSupervisor.Id_supervisor,authenticatedSupervisor.Id_usuario)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Error al generar token"})
 		return
