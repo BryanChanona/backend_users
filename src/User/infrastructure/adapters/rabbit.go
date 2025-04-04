@@ -11,7 +11,6 @@ import (
 
 var client mqtt.Client
 
-
 // InitMQTT inicializa la conexión al broker MQTT
 func InitMQTT() {
 	opts := mqtt.NewClientOptions()
@@ -39,8 +38,8 @@ func PublishUserData(idUser, idDevice int) error {
 	}
 
 	data := domain.DeviceData{
-		IdUser: idUser,
-		IdDevice: idDevice,	
+		IdUser:   idUser,
+		IdDevice: idDevice,
 	}
 
 	// Convertir los datos a JSON
@@ -50,17 +49,19 @@ func PublishUserData(idUser, idDevice int) error {
 		return fmt.Errorf("error al serializar los datos")
 	}
 
-	// Publicar en MQTT
-	topic := "device.data"
-	token := client.Publish(topic, 0, false, payload)
-	token.Wait() // Esperar a que se complete la publicación
+	// Publicar en MQTT en ambos tópicos
+	topics := []string{"device.data", "device.data2"}
+	for _, topic := range topics {
+		token := client.Publish(topic, 0, false, payload)
+		token.Wait() // Esperar a que se complete la publicación
 
-	if token.Error() != nil {
-		log.Printf("Error al publicar el mensaje: %v", token.Error())
-		return fmt.Errorf("error al publicar el mensaje en MQTT")
+		if token.Error() != nil {
+			log.Printf("Error al publicar el mensaje en %s: %v", topic, token.Error())
+			return fmt.Errorf("error al publicar el mensaje en MQTT en el tópico %s", topic)
+		}
+
+		fmt.Printf("Mensaje enviado a MQTT en %s: %s\n", topic, string(payload))
 	}
-
-	fmt.Println("Mensaje enviado a MQTT:", string(payload))
 
 	return nil
 }
