@@ -14,7 +14,7 @@ var client mqtt.Client
 // InitMQTT inicializa la conexión al broker MQTT
 func InitMQTT() {
 	opts := mqtt.NewClientOptions()
-	opts.AddBroker("tcp://3.234.181.19:1883") // Dirección del broker MQTT
+	opts.AddBroker("tcp://3.224.198.206:1883") // Dirección del broker MQTT
 	opts.SetClientID("mqtt_publisher")
 	opts.SetUsername("carlos")
 	opts.SetPassword("carlos")
